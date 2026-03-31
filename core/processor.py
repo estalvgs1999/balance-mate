@@ -197,10 +197,13 @@ class FileProcessor(QThread):
             str: Path to the generated Excel file.
         """
         import sys
-        if hasattr(sys, "_MEIPASS"):
-            base_dir = sys._MEIPASS
-        else:
-            base_dir = os.path.dirname(os.path.dirname(__file__))
+        
+        def resource_path(relative_path):
+            try:
+                base_path = sys._MEIPASS
+            except Exception:
+                base_path = os.path.dirname(os.path.dirname(__file__))
+            return os.path.join(base_path, relative_path)
 
         temp_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "temp")
         os.makedirs(temp_dir, exist_ok=True)
@@ -210,7 +213,7 @@ class FileProcessor(QThread):
             temp_dir, f"balance-mate-{self.month}-{self.year}-{timestamp}.xlsx"
         )
 
-        template_path = os.path.join(base_dir, "docs", "original", "balance-mate-template.xlsx")
+        template_path = resource_path(os.path.join("docs", "original", "balance-mate-template.xlsx"))
         shutil.copy(template_path, temp_file_path)
 
         print("Loading workbook...")

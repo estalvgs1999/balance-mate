@@ -7,6 +7,10 @@ from PyQt6.QtWidgets import (QFileDialog, QMainWindow, QVBoxLayout, QWidget,
 
 from ui.components.file_selector import FileSelector
 from ui.components.progress_bar import ProgressBar
+from ui.components.message_box import show_error, show_info
+from ui.report_window import ReportWindow
+from core.validator import validate_csv_structure
+from core.processor import FileProcessor
 
 
 class MainWindow(QMainWindow):
@@ -46,16 +50,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def handle_file(self, file_path):
-        from core.validator import validate_csv_structure
-        from ui.report_window import ReportWindow
-
         is_valid, message = validate_csv_structure(file_path)
         if is_valid:
             self.report_window = ReportWindow(file_path, self.start_processing)
             self.report_window.show()
         else:
-            from ui.components.message_box import show_error
-
             show_error(
                 self,
                 "Invalid structure",
@@ -63,8 +62,6 @@ class MainWindow(QMainWindow):
             )
 
     def start_processing(self, file_path, month, year):
-        from core.processor import FileProcessor
-
         self.progress_bar.setVisible(True)
         self.progress_bar.reset()
 
@@ -75,7 +72,6 @@ class MainWindow(QMainWindow):
 
     def processing_finished(self, success, message, output_file_path):
         self.progress_bar.setVisible(False)
-        from ui.components.message_box import show_error, show_info
 
         if success:
             suggested_name = os.path.basename(output_file_path)

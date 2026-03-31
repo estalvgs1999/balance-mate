@@ -6,8 +6,12 @@ a = Analysis(
     ['main.pyw'],
     pathex=[],
     binaries=[],
-    datas=[('resources', 'resources')],
-    hiddenimports=[],
+    datas=[
+        ('resources', 'resources'),
+        ('docs/original', 'docs/original'),
+        ('ui/styles', 'ui/styles')
+    ],
+    hiddenimports=['openpyxl.cell._writer'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

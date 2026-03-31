@@ -7,6 +7,12 @@ from PyQt6.QtWidgets import QApplication
 
 from ui.main_window import MainWindow
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def main():
     # Set the application user model ID for Windows taskbar icon (Windows only)
@@ -23,7 +29,7 @@ def main():
     app = QApplication(sys.argv)
     
     # Apply modern styling
-    style_path = os.path.join("ui", "styles", "main.qss")
+    style_path = resource_path(os.path.join("ui", "styles", "main.qss"))
     if os.path.exists(style_path):
         with open(style_path, "r") as f:
             app.setStyleSheet(f.read())
