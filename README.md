@@ -1,83 +1,79 @@
-# BalanceMate
+# ⚖️ BalanceMate
 
-BalanceMate is a software application designed to process CSV files containing financial transactions and export the data to an Excel format. It is particularly useful for managing and reporting monthly balances.
+**BalanceMate** is a deeply optimized, cross-platform desktop application designed to process bank statement CSV files and flawlessly export the transactions into a formatted Excel report. It takes the pain out of managing and balancing monthly accounting sheets.
 
-## Features
+![BalanceMate Overview](resources/icons/icon.png)
 
-- Reads and processes CSV files with financial data.
-- Cleans and formats the data.
-- Exports the processed data to an Excel file.
-- User-friendly interface for selecting files and specifying report parameters.
+## ✨ Key Features
+- **Cross-Platform Support**: Runs natively and beautifully on both **macOS** and **Windows**.
+- **Modern Premium UI**: Featuring a sleek Dark Mode aesthetic rendered with Qt Style Sheets, utilizing zero-lag system typography and dynamic drag-and-drop dropzones.
+- **Lightning-Fast Generation**: The underlying data engine processes banking statements instantly into an `.xlsx` templated model with zero structural bottleneck.
+- **Smart Data Validation**: Built-in `Sniffer` dynamically detects delimiter boundaries (`,`, `;`), checks for missing required columns, verifies content structures, and returns detailed human-readable errors via the GUI if a bad CSV is uploaded.
+- **Automated Windows Builds**: Seamlessly generates bundled `.exe` executables through GitHub Actions.
 
-## Installation
+## 🚀 Installation & Usage
 
 ### Prerequisites
+- Python 3.9+ 
+- (Optional) Git
 
-- Python 3.9 must be installed on your system. You can download it from the [official Python website](https://www.python.org/downloads/release/python-390/).
-
-### Steps
-
+### Quickstart (macOS & Windows Source)
 1. **Clone the repository:**
-
-    ```sh
+    ```bash
     git clone https://github.com/yourusername/balance-mate.git
     cd balance-mate
     ```
 
-2. **Run the installation script:**
-
-    Open PowerShell and navigate to the project directory. Then, execute the following command:
-
-    ```ps1
-    .\install.ps1
-    ```
-
-    This script will:
-    - Create a virtual environment.
-    - Activate the virtual environment.
-    - Install the required dependencies.
-    - Create a desktop shortcut for easy access.
-
-## Running the Application
-
-1. **Activate the virtual environment:**
-
-    ```ps1
+2. **Set up the Virtual Environment & Dependencies:**
+    ```bash
+    python -m venv .venv
+    
+    # On macOS:
+    source .venv/bin/activate
+    # On Windows:
     .\.venv\Scripts\Activate.ps1
+    
+    pip install -r requirements.txt
     ```
 
-2. **Run the application:**
-
-    ```sh
+3. **Launch the Application:**
+    ```bash
     python main.pyw
     ```
 
-    Alternatively, you can use the desktop shortcut created during the installation process.
+---
 
-## Important Notes
+## 💻 Packaging an Executable (`.exe`) for Windows
 
-- Ensure that your CSV files follow the expected structure with the required columns: `oficina`, `fechaMovimiento`, `numeroDocumento`, `debito`, `credito`, and `descripcion`.
-- The application uses PyQt6 for the graphical user interface, so make sure your system supports it.
+If you wish to distribute a standalone `.exe` file that doesn't require Python to be installed on the host machine, you have two options:
 
-## Contributing
+### Option A: GitHub Actions (Automated & Recommended)
+1. Push your code to the GitHub repository.
+2. The bundled GitHub Action (`.github/workflows/build-windows.yml`) will automatically trigger.
+3. Wait ~2 minutes for the build to pass.
+4. Download your compiled standalone application from the **Artifacts** summary under the "Actions" tab.
 
-If you would like to contribute to BalanceMate, please fork the repository and submit a pull request. We welcome all contributions!
+### Option B: Local Windows Build
+If you are currently on a Windows machine:
+1. Double click the **`build.bat`** file from the root directory.
+2. PyInstaller will compile everything statically and output the `.exe` inside the automatically generated `dist/` directory.
 
-## License
+---
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any questions or issues, please open an issue on the [GitHub repository](https://github.com/yourusername/balance-mate/issues).
-## 📞 Contact
-
-For any questions or issues, please open an issue on the [GitHub repository](https://github.com/yourusername/balance-mate/issues).
-
-## 📜 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## 📁 CSV Structure Requirements
+For the application to correctly balance the sheet, the input CSV banking statement must maintain the following headers (as exported natively by standard Spanish bank platforms):
+- `oficina`
+- `fechaMovimiento`
+- `numeroDocumento`
+- `debito`
+- `credito`
+- `descripcion`
 
 ## 🤝 Contributing
-
 If you would like to contribute to BalanceMate, please fork the repository and submit a pull request. We welcome all contributions!
+
+## 📜 License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+For any questions or issues, please open an issue on the [GitHub repository](https://github.com/yourusername/balance-mate/issues).

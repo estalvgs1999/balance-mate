@@ -1,8 +1,9 @@
 import os
 import shutil
 
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QFileDialog, QMainWindow, QVBoxLayout, QWidget
+from PyQt6.QtGui import QIcon, QColor
+from PyQt6.QtWidgets import (QFileDialog, QMainWindow, QVBoxLayout, QWidget, 
+                             QGraphicsDropShadowEffect)
 
 from ui.components.file_selector import FileSelector
 from ui.components.progress_bar import ProgressBar
@@ -13,15 +14,26 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BalanceMate")
-        self.setFixedSize(400, 200)
+        self.setFixedSize(450, 280)
 
         # Set window icon
-        self.setWindowIcon(QIcon("resources\icons\icon.png"))
+        self.setWindowIcon(QIcon(os.path.join("resources", "icons", "icon.png")))
         # Layout principal
         self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(20, 20, 20, 20)
+        self.layout.setSpacing(15)
 
         # Componente de selección de archivo
         self.file_selector = FileSelector(self.handle_file)
+        
+        # Add Drop Shadow for depth
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(15)
+        shadow.setXOffset(0)
+        shadow.setYOffset(4)
+        shadow.setColor(QColor(0, 0, 0, 80))
+        self.file_selector.setGraphicsEffect(shadow)
+
         self.layout.addWidget(self.file_selector)
 
         # Barra de progreso
@@ -37,7 +49,8 @@ class MainWindow(QMainWindow):
         from core.validator import validate_csv_structure
         from ui.report_window import ReportWindow
 
-        if validate_csv_structure(file_path):
+        is_valid, message = validate_csv_structure(file_path)
+        if is_valid:
             self.report_window = ReportWindow(file_path, self.start_processing)
             self.report_window.show()
         else:
@@ -45,8 +58,8 @@ class MainWindow(QMainWindow):
 
             show_error(
                 self,
-                "Estructura inválida",
-                "El archivo CSV no tiene la estructura esperada.",
+                "Invalid structure",
+                message,
             )
 
     def start_processing(self, file_path, month, year):

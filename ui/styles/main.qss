@@ -1,0 +1,67 @@
+/* main.qss */
+QMainWindow, QWidget, QDialog {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+QComboBox {
+    background-color: #313244;
+    border: 1px solid #45475a;
+    border-radius: 6px;
+    padding: 6px;
+    color: #cdd6f4;
+}
+
+QPushButton {
+    background-color: #89b4fa;
+    color: #11111b;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #b4befe;
+}
+
+QPushButton:pressed {
+    background-color: #74c7ec;
+}
+
+QProgressBar {
+    background-color: #313244;
+    border: 1px solid #45475a;
+    border-radius: 6px;
+    text-align: center;
+    color: #cdd6f4;
+}
+
+QProgressBar::chunk {
+    background-color: #a6e3a1;
+    border-radius: 4px;
+}
+
+/* Specific component styling via object name */
+#fileSelector {
+    border: 2px dashed #6c7086;
+    border-radius: 8px;
+    background-color: #181825;
+    padding: 20px;
+}
+
+#fileSelector:hover {
+    border-color: #89b4fa;
+    background-color: #313244;
+}
+
+#fileSelector[dragActive="true"] {
+    border: 2px solid #a6e3a1;
+    background-color: #313244;
+}
+
+QLabel {
+    color: #cdd6f4;
+}

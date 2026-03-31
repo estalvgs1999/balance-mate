@@ -3,8 +3,8 @@ import pandas as pd
 
 def export_to_excel(dataframe, save_path):
     try:
-        # En el futuro aquí estará la lógica real de exportación
+        # Future implementation for real export logic here
         dataframe.to_excel(save_path, index=False)
-        return True, "Archivo exportado con éxito."
+        return True, "File exported successfully."
     except Exception as e:
-        return False, f"Error al exportar: {str(e)}"
+        return False, f"Export error: {str(e)}"

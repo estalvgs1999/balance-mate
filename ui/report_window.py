@@ -1,54 +1,57 @@
+import os
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QPushButton,
-                             QVBoxLayout, QWidget)
+                             QVBoxLayout, QWidget, QGraphicsDropShadowEffect)
 
 
 class ReportWindow(QWidget):
     def __init__(self, file_path, process_callback):
         super().__init__()
-        self.setWindowTitle("Seleccionar Mes y Año")
-        self.setFixedSize(300, 150)
+        self.setWindowTitle("Select Month and Year")
+        self.setFixedSize(350, 230)
 
         # Set window icon
-        self.setWindowIcon(QIcon("resources\icons\icon.png"))
+        self.setWindowIcon(QIcon(os.path.join("resources", "icons", "icon.png")))
 
         self.file_path = file_path
         self.process_callback = process_callback
 
         layout = QVBoxLayout()
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
 
         self.month_combo = QComboBox()
         self.month_combo.addItems(
             [
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Agosto",
-                "Septiembre",
-                "Octubre",
-                "Noviembre",
-                "Diciembre",
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
             ]
         )
-        layout.addWidget(QLabel("Seleccionar Mes:"))
+        layout.addWidget(QLabel("Select Month:"))
         layout.addWidget(self.month_combo)
 
         self.year_combo = QComboBox()
         self.year_combo.addItems([str(year) for year in range(2025, 2040)])
-        layout.addWidget(QLabel("Seleccionar Año:"))
+        layout.addWidget(QLabel("Select Year:"))
         layout.addWidget(self.year_combo)
 
         button_layout = QHBoxLayout()
 
-        process_button = QPushButton("Convertir")
+        process_button = QPushButton("Convert")
         process_button.clicked.connect(self.start_processing)
         button_layout.addWidget(process_button)
 
-        cancel_button = QPushButton("Cancelar")
+        cancel_button = QPushButton("Cancel")
         cancel_button.clicked.connect(self.close)
         button_layout.addWidget(cancel_button)
 

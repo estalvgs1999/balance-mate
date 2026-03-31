@@ -58,10 +58,10 @@ class FileProcessor(QThread):
         try:
             success, output_file_path = self.process()
             self.finished.emit(
-                success, "Proceso completado con éxito.", output_file_path
+                success, "Process completed successfully.", output_file_path
             )
         except Exception as e:
-            self.finished.emit(False, f"Error durante el procesamiento: {str(e)}", None)
+            self.finished.emit(False, f"Processing error: {str(e)}", None)
 
     def process(self):
         """
@@ -119,8 +119,15 @@ class FileProcessor(QThread):
         Returns:
             pd.DataFrame: Data from the CSV file.
         """
+        import csv
         print(f"Reading CSV file from {file_path}...")
-        return pd.read_csv(file_path, sep=";", encoding="utf-8")
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                sample = f.read(1024)
+                delimiter = csv.Sniffer().sniff(sample).delimiter
+        except Exception:
+            delimiter = ";"
+        return pd.read_csv(file_path, sep=delimiter, encoding="utf-8")
 
     def clean_data(self, df):
         """
@@ -189,6 +196,12 @@ class FileProcessor(QThread):
         Returns:
             str: Path to the generated Excel file.
         """
+        import sys
+        if hasattr(sys, "_MEIPASS"):
+            base_dir = sys._MEIPASS
+        else:
+            base_dir = os.path.dirname(os.path.dirname(__file__))
+
         temp_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "temp")
         os.makedirs(temp_dir, exist_ok=True)
 
@@ -197,10 +210,8 @@ class FileProcessor(QThread):
             temp_dir, f"balance-mate-{self.month}-{self.year}-{timestamp}.xlsx"
         )
 
-        shutil.copy(
-            os.path.join("docs", "original", "balance-mate-template.xlsx"),
-            temp_file_path,
-        )
+        template_path = os.path.join(base_dir, "docs", "original", "balance-mate-template.xlsx")
+        shutil.copy(template_path, temp_file_path)
 
         print("Loading workbook...")
         wb = load_workbook(temp_file_path)
@@ -209,16 +220,19 @@ class FileProcessor(QThread):
         sheet_name = f"{self.month} {self.year}"
         ws.title = sheet_name
         start_row = 8
+        total_rows = len(incoming_balance)
+        
         for idx, row in incoming_balance.iterrows():
-            ws[f"A{start_row}"] = row["description"]
-            ws[f"B{start_row}"] = row["credit"]
-            ws[f"C{start_row}"] = row["date"]
-            ws[f"D{start_row}"] = row["document_number"]
-
-            ws[f"B{start_row}"].number_format = "#,##0.00"
+            ws.cell(row=start_row, column=1, value=row["description"])
+            cell_b = ws.cell(row=start_row, column=2, value=row["credit"])
+            cell_b.number_format = "#,##0.00"
+            ws.cell(row=start_row, column=3, value=row["date"])
+            ws.cell(row=start_row, column=4, value=row["document_number"])
             start_row += 1
-            self.progress.emit(int((idx + 1) / len(incoming_balance) * 100))
-            time.sleep(0.02)
+            
+            # Emit progress sparingly for massive speedup
+            if idx % 50 == 0 or idx == total_rows - 1:
+                self.progress.emit(int((idx + 1) / total_rows * 100))
 
         print("Saving workbook...")
         wb.save(temp_file_path)
